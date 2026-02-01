@@ -17,7 +17,7 @@
 - **Java**: 17
 - **Spring Security**: OAuth 2.0 / OpenID Connect
 - **Thymeleaf**: 模板引擎
-- **Keycloak**: 身份认证服务器
+- **Keycloak**: 26.5.2 (身份认证服务器)
 - **Maven**: 项目管理工具
 
 ## 项目结构
@@ -42,12 +42,16 @@ sso-demo/
 │
 ├── app-b/                          # 应用 B（端口 20000，结构同 app-a）
 │
-├── start-app-a.bat                 # 启动 App A
-├── start-app-b.bat                 # 启动 App B
-├── stop-app-a.bat                  # 停止 App A
-├── stop-app-b.bat                  # 停止 App B
-├── restart-all.bat                 # 重启所有应用
-└── pom.xml                         # 父 POM
+├── scripts/                    # 批处理脚本目录
+│   ├── start-app-a.bat        # 启动 App A
+│   ├── start-app-b.bat        # 启动 App B
+│   ├── start-all.bat          # 同时启动两个应用
+│   ├── stop-app-a.bat         # 停止 App A
+│   ├── stop-app-b.bat         # 停止 App B
+│   ├── stop-all.bat           # 停止所有应用
+│   └── restart-all.bat        # 重启所有应用
+│
+└── pom.xml                     # 父 POM
 ```
 
 ## 快速开始
@@ -56,7 +60,7 @@ sso-demo/
 
 1. **JDK 17+**
 2. **Maven 3.6+**
-3. **Keycloak 服务器** (运行在 http://localhost:8080)
+3. **Keycloak 26.5.2** (运行在 http://localhost:8080)
 4. 管理员权限（用于修改 hosts 文件）
 
 ### 1. 配置 Hosts 文件
@@ -86,13 +90,13 @@ sudo nano /etc/hosts
 **方式一：使用批处理脚本（Windows）**
 ```bash
 # 启动 App A
-start-app-a.bat
+scripts\start-app-a.bat
 
 # 启动 App B
-start-app-b.bat
+scripts\start-app-b.bat
 
 # 或同时启动两个应用
-start-all.bat
+scripts\start-all.bat
 ```
 
 **方式二：手动启动**
@@ -571,13 +575,13 @@ App B 使会话失效
 
 | 文件 | 说明 |
 |------|------|
-| `start-app-a.bat` | 启动 App A |
-| `start-app-b.bat` | 启动 App B |
-| `start-all.bat` | 同时启动两个应用 |
-| `stop-app-a.bat` | 停止 App A |
-| `stop-app-b.bat` | 停止 App B |
-| `stop-all.bat` | 停止所有应用 |
-| `restart-all.bat` | 重启所有应用 |
+| `scripts/start-app-a.bat` | 启动 App A |
+| `scripts/start-app-b.bat` | 启动 App B |
+| `scripts/start-all.bat` | 同时启动两个应用 |
+| `scripts/stop-app-a.bat` | 停止 App A |
+| `scripts/stop-app-b.bat` | 停止 App B |
+| `scripts/stop-all.bat` | 停止所有应用 |
+| `scripts/restart-all.bat` | 重启所有应用 |
 
 ## 安全建议
 
