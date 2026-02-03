@@ -25,7 +25,7 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/error", "/webjars/**", "/logout", "/logout/connect/back-channel/keycloak", "/api/session/status").permitAll()
+                .requestMatchers("/", "/error", "/webjars/**", "/logout", "/logout-success", "/logout/connect/back-channel/keycloak", "/api/session/status").permitAll()
                 .requestMatchers("/home", "/home/**").authenticated()
                 .anyRequest().authenticated()
             )
@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     public OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
         OidcClientInitiatedLogoutSuccessHandler successHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-        successHandler.setPostLogoutRedirectUri("{baseUrl}/");
+        successHandler.setPostLogoutRedirectUri("{baseUrl}/logout-success");
         return successHandler;
     }
 

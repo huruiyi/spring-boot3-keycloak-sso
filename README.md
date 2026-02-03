@@ -170,8 +170,8 @@ mvn spring-boot:run
      ```
    - Valid post logout redirect URIs:
      ```
-     http://appa.tbk.com/*
-     http://localhost:10000/*
+     http://appa.tbk.com/logout-success
+     http://localhost:10000/logout-success
      ```
    - Web origins:
      ```
@@ -404,7 +404,6 @@ spring:
             client-secret: <从 Keycloak 复制>
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            post-logout-redirect-uri: "{baseUrl}/"
             scope: openid,profile,email
         provider:
           keycloak:

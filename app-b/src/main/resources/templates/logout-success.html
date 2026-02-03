@@ -3,57 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注销成功</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <th:block th:replace="~{fragments/head :: head}"></th:block>
-    <style>
-        .logout-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .logout-card {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 400px;
-        }
-        .success-icon {
-            font-size: 48px;
-            color: #28a745;
-            margin: 20px 0;
-        }
-        h1 {
-            color: #f5576c;
-            margin-bottom: 20px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #f5576c;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background: #e04858;
-        }
-    </style>
+    <title>退出成功 - App B</title>
+    <script>
+        // 3秒后自动跳转到首页
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 3000);
+    </script>
 </head>
 <body>
-    <div class="logout-container">
-        <div class="logout-card">
-            <div class="success-icon">✓</div>
-            <h1>注销成功</h1>
-            <p>您已成功退出登录</p>
-            <p>感谢您的使用！</p>
-            <a href="/" class="btn">返回首页</a>
+    <div class="container" style="text-align: center; padding: 100px 0;">
+        <div class="welcome-card" style="background: #d4edda; border-left: 4px solid #28a745;">
+            <h1>✅ 退出成功</h1>
+            <p style="font-size: 18px; margin: 20px 0;">您已成功退出 <strong>App B</strong></p>
+            <p style="color: #666; margin: 15px 0;">
+                <span id="countdown">3</span> 秒后自动跳转到首页...
+            </p>
+            
+            <div style="margin: 30px 0;">
+                <a href="/" class="btn" style="margin-right: 10px;">立即返回首页</a>
+                <a href="http://appa.tbk.com/" class="btn secondary">访问 App A</a>
+            </div>
+            
+            <div class="note" style="margin-top: 30px;">
+                <p>💡 <strong>单点登出提示:</strong></p>
+                <ul style="text-align: left; margin: 10px 0; padding-left: 20px;">
+                    <li>您已从所有应用中退出登录</li>
+                    <li>访问任何应用都需要重新登录</li>
+                    <li>您的会话已安全清除</li>
+                </ul>
+            </div>
         </div>
     </div>
+
+    <script>
+        // 倒计时显示
+        let countdown = 3;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(function() {
+            countdown--;
+            if (countdownElement) {
+                countdownElement.textContent = countdown;
+            }
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

@@ -32,7 +32,7 @@
     "client.secret.creation.time": "1769954682",
     "standard.token.exchange.enabled": "false",
     "frontchannel.logout.session.required": "true",
-    "post.logout.redirect.uris": "http://localhost:20000/##http://appb.tbk.com/",
+    "post.logout.redirect.uris": "http://localhost:20000/logout-success##http://appb.tbk.com/logout-success",
     "oauth2.device.authorization.grant.enabled": "false",
     "backchannel.logout.revoke.offline.tokens": "false",
     "realm_client": "false",

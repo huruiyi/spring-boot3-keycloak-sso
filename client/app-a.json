@@ -30,7 +30,7 @@
   "protocol": "openid-connect",
   "attributes": {
     "frontchannel.logout.session.required": "true",
-    "post.logout.redirect.uris": "http://appa.tbk.com/##http://localhost:10000/",
+    "post.logout.redirect.uris": "http://appa.tbk.com/logout-success##http://localhost:10000/logout-success",
     "oauth2.device.authorization.grant.enabled": "false",
     "use.jwks.url": "false",
     "backchannel.logout.revoke.offline.tokens": "false",

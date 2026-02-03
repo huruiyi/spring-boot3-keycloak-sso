@@ -91,6 +91,13 @@ public class HomeController {
         return "logout";
     }
 
+    @GetMapping("/logout-success")
+    public String logoutSuccess() {
+        System.out.println("=== 显示退出成功页面 ===");
+        System.out.println("用户已成功退出，显示反馈页面");
+        return "logout-success";
+    }
+
     @GetMapping("/api/session/status")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> sessionStatus(
