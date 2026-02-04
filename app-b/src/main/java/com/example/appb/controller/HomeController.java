@@ -5,6 +5,8 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +19,15 @@ import java.time.Instant;
 public class HomeController {
 
     @GetMapping("/")
-    public String index() {
+    public String index(@AuthenticationPrincipal OidcUser user, Model model) {
+        if (user != null) {
+            // 用户已登录，传递用户信息到模板
+            model.addAttribute("authenticated", true);
+            model.addAttribute("username", user.getPreferredUsername());
+            model.addAttribute("app", "App B");
+        } else {
+            model.addAttribute("authenticated", false);
+        }
         return "index";
     }
 
@@ -109,6 +119,7 @@ public class HomeController {
         status.put("sessionId", request.getSession().getId());
         status.put("sessionCreationTime", new Date(request.getSession().getCreationTime()));
         status.put("sessionLastAccessTime", new Date(request.getSession().getLastAccessedTime()));
+        status.put("timestamp", System.currentTimeMillis());
         
         if (user != null) {
             status.put("username", user.getPreferredUsername());
@@ -116,5 +127,46 @@ public class HomeController {
         }
         
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/api/cross-app/auth-check")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> crossAppAuthCheck(
+            @AuthenticationPrincipal OidcUser user,
+            HttpServletRequest request) {
+        Map<String, Object> status = new HashMap<>();
+        
+        status.put("authenticated", user != null);
+        status.put("app", "App B");
+        status.put("timestamp", System.currentTimeMillis());
+        
+        if (user != null) {
+            status.put("username", user.getPreferredUsername());
+        }
+        
+        // 获取请求来源
+        String origin = request.getHeader("Origin");
+        String allowedOrigin = "http://appa.tbk.com"; // 明确指定允许的源
+        
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", allowedOrigin)
+                .header("Access-Control-Allow-Methods", "GET, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .header("Access-Control-Allow-Credentials", "true")
+                .body(status);
+    }
+
+    @RequestMapping(value = "/api/cross-app/auth-check", method = RequestMethod.OPTIONS)
+    @ResponseBody
+    public ResponseEntity<Void> crossAppAuthCheckOptions(HttpServletRequest request) {
+        String allowedOrigin = "http://appa.tbk.com";
+        
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", allowedOrigin)
+                .header("Access-Control-Allow-Methods", "GET, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Max-Age", "3600")
+                .build();
     }
 }

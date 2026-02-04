@@ -7,8 +7,31 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Expires" content="0">
 	<th:block th:replace="~{fragments/head :: head}"></th:block>
+	<!-- 移除立即跳转的JavaScript，改为更安全的检查 -->
 	<script th:if="${username == null}">
-		window.location.href = '/';
+		console.log('用户名为空，但不立即跳转，等待页面完全加载后再检查');
+		document.addEventListener('DOMContentLoaded', function() {
+			// 延迟3秒后再检查，给认证过程充分时间
+			setTimeout(function() {
+				console.log('延迟检查用户认证状态');
+				// 通过API检查而不是依赖模板变量
+				fetch('/api/session/status')
+					.then(response => response.json())
+					.then(data => {
+						if (!data.authenticated) {
+							console.log('确认用户未认证，跳转到首页');
+							window.location.href = '/';
+						} else {
+							console.log('用户已认证，刷新页面以获取正确的用户信息');
+							window.location.reload();
+						}
+					})
+					.catch(error => {
+						console.error('检查认证状态失败:', error);
+						// 网络错误时不跳转，避免误判
+					});
+			}, 3000);
+		});
 	</script>
 </head>
 <body>
@@ -22,7 +45,7 @@
 		</div>
 		<div class="nav-links">
 			<span th:text="'欢迎, ' + ${username}"></span>
-			<form action="/logout" method="post" style="display: inline;">
+			<form action="/logout" method="post" style="display: inline;" onsubmit="signalLogout()">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 				<button type="submit">退出登录</button>
 			</form>

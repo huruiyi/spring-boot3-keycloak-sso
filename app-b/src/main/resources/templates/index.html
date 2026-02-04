@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,10 +40,17 @@
             border-radius: 5px;
             font-weight: bold;
             transition: transform 0.2s;
+            margin: 5px;
         }
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .btn.primary:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         .app-info {
             background: #f8f9fa;
@@ -53,13 +60,104 @@
             font-size: 14px;
             color: #666;
         }
+        .welcome-back {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .app-links {
+            margin-top: 20px;
+        }
     </style>
+    <script>
+        // 测试会话状态
+        function testSessionStatus() {
+            const output = document.getElementById('debug-output');
+            if (output) {
+                output.textContent = '正在检查会话状态...';
+            }
+            
+            fetch('/api/session/status')
+                .then(response => response.json())
+                .then(data => {
+                    const result = '会话状态检查结果:\n' + JSON.stringify(data, null, 2);
+                    console.log(result);
+                    if (output) {
+                        output.textContent = result;
+                    } else {
+                        alert(result);
+                    }
+                })
+                .catch(error => {
+                    const result = '会话状态检查失败:\n' + error.toString();
+                    console.error(result);
+                    if (output) {
+                        output.textContent = result;
+                    } else {
+                        alert(result);
+                    }
+                });
+        }
+        
+        // 清理localStorage中的退出信号（只清理跨标签页通信用的信号）
+        function clearLogoutSignals() {
+            localStorage.removeItem('logout_signal');
+            console.log('已清理退出登录信号');
+            alert('已清理退出登录信号');
+        }
+        
+        // 在开发环境中添加调试功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 如果按下Ctrl+Shift+S，显示会话状态
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+                    testSessionStatus();
+                } else if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    clearLogoutSignals();
+                }
+            });
+            
+            // 页面加载时自动检查会话状态（仅在控制台）
+            console.log('页面加载时检查会话状态...');
+            testSessionStatus();
+        });
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 欢迎使用 App B</h1>
-        <p>这是一个基于Keycloak单点登录的演示应用。登录后，您可以在App A和App B之间无缝切换，无需重复认证。</p>
-        <a href="/oauth2/authorization/keycloak" class="btn">通过 Keycloak 登录</a>
+        <!-- 未登录状态 -->
+        <div th:if="${!authenticated}">
+            <h1>🎯 欢迎使用 App B</h1>
+            <p>这是一个基于Keycloak单点登录的演示应用。登录后，您可以在App A和App B之间无缝切换，无需重复认证。</p>
+            <a href="/oauth2/authorization/keycloak" class="btn">通过 Keycloak 登录</a>
+        </div>
+
+        <!-- 已登录状态 -->
+        <div th:if="${authenticated}">
+            <h1>🎉 欢迎回来！</h1>
+            <div class="welcome-back">
+                <p><strong>您已成功登录</strong></p>
+                <p>用户名: <span th:text="${username}"></span></p>
+            </div>
+            <p>您可以直接进入应用主页，或者切换到其他应用。</p>
+            
+            <div class="app-links">
+                <a href="/home" class="btn">进入 App B 主页</a>
+                <a href="http://appa.tbk.com/home" class="btn primary">跳转到 App A</a>
+            </div>
+            
+            <!-- 调试信息 -->
+            <div style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">
+                <p><strong>调试信息:</strong></p>
+                <button onclick="testSessionStatus()" style="margin: 5px; padding: 5px 10px;">测试会话状态</button>
+                <button onclick="clearLogoutSignals()" style="margin: 5px; padding: 5px 10px;">清理退出信号</button>
+                <div id="debug-output" style="margin-top: 10px; font-family: monospace; white-space: pre-wrap;"></div>
+            </div>
+        </div>
+
         <div class="app-info">
             <p><strong>应用信息:</strong></p>
             <p>应用名称: App B<br>

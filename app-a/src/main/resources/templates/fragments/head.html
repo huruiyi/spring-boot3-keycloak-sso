@@ -193,5 +193,83 @@
 			color: #663c00;
 		}
 	</style>
+	<script>
+		// 基于API的登录状态检测器
+		console.log('启用基于API的登录状态检测器');
+		
+		// 检查当前应用的登录状态
+		function checkAuthStatus() {
+			console.log('检查当前应用登录状态...');
+			return fetch('/api/session/status')
+				.then(response => response.json())
+				.then(data => {
+					console.log('登录状态检查结果:', data);
+					if (!data.authenticated) {
+						console.log('检测到用户已退出登录，跳转到首页');
+						window.location.href = '/';
+						return false;
+					} else {
+						console.log('用户仍处于登录状态');
+						return true;
+					}
+				})
+				.catch(error => {
+					console.error('检测登录状态时出错:', error);
+					// 网络错误不跳转，避免误判
+					return true;
+				});
+		}
+
+		// 页面加载完成后启动检测器
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('页面加载完成，当前路径:', window.location.pathname);
+			
+			// 只在需要认证的页面启动检测器
+			if (window.location.pathname === '/home' || window.location.pathname.startsWith('/home')) {
+				console.log('在认证页面，启动登录状态检测器');
+				
+				// 延迟10秒后开始定期检测（给页面充分的加载和认证时间）
+				setTimeout(function() {
+					console.log('开始定期登录状态检测');
+					// 每30秒检测一次（降低频率，减少干扰）
+					setInterval(checkAuthStatus, 30000);
+				}, 10000);
+				
+				// 页面获得焦点时检测一次（用户切换回标签页时）
+				window.addEventListener('focus', function() {
+					console.log('页面获得焦点，检测登录状态');
+					// 延迟2秒后检测，避免频繁触发
+					setTimeout(checkAuthStatus, 2000);
+				});
+				
+				// 监听storage事件，用于跨标签页退出登录通信
+				window.addEventListener('storage', function(e) {
+					console.log('收到storage事件:', e.key, e.newValue);
+					if (e.key === 'logout_signal' && e.newValue === 'true') {
+						console.log('收到其他标签页的退出登录信号');
+						localStorage.removeItem('logout_signal');
+						window.location.href = '/';
+					}
+				});
+
+				// 监听beforeunload事件，在页面关闭前清理
+				window.addEventListener('beforeunload', function() {
+					console.log('页面即将关闭');
+				});
+			} else {
+				console.log('不在认证页面，不启动检测器');
+			}
+		});
+
+		// 在退出登录时发送信号给其他标签页（只用于跨标签页通信）
+		function signalLogout() {
+			console.log('发送退出登录信号给其他标签页');
+			// 只设置退出信号，不使用localStorage存储状态
+			localStorage.setItem('logout_signal', 'true');
+			setTimeout(() => {
+				localStorage.removeItem('logout_signal');
+			}, 1000);
+		}
+	</script>
 </head>
 </html>
