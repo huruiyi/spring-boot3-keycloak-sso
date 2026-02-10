@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册成功 - App A</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .secondary:hover {
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+        }
+        .info-box {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #155724;
+        }
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin: 5px 0;
+            color: #155724;
+        }
+        .countdown {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>🎉 注册成功！</h1>
+        
+        <div class="info-box">
+            <h3>📋 接下来的步骤：</h3>
+            <ul>
+                <li>您的账户 <strong th:text="${username}"></strong> 已成功创建</li>
+                <li>您的账户同时在 App A 和 App B 中可用</li>
+                <li>点击"立即登录"按钮，使用刚才的密码即可登录</li>
+            </ul>
+        </div>
+        
+        <div class="countdown">
+            <strong>💡 提示：</strong> 您现在可以使用此账户登录 App A 和 App B，享受单点登录的便利！
+        </div>
+        
+        <a href="/oauth2/authorization/keycloak" class="btn">立即登录</a>
+        <a href="/" class="btn secondary">返回首页</a>
+    </div>
+
+    <script>
+        // 3秒后自动跳转到登录页面
+        setTimeout(function() {
+            window.location.href = '/oauth2/authorization/keycloak';
+        }, 3000);
+    </script>
+</body>
+</html>

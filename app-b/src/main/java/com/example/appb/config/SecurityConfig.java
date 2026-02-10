@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,7 +26,9 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/error", "/webjars/**", "/logout", "/logout-success", "/logout/connect/back-channel/keycloak", "/api/session/status").permitAll()
+                .requestMatchers("/", "/error", "/webjars/**", "/logout", "/logout-success", 
+                                "/logout/connect/back-channel/keycloak", "/api/session/status",
+                                "/users/register", "/users/registration-success", "/users/test-keycloak").permitAll()
                 .requestMatchers("/home", "/home/**").authenticated()
                 .anyRequest().authenticated()
             )
@@ -87,5 +90,10 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         String jwkSetUri = "http://localhost:8080/realms/fairy.vip/protocol/openid-connect/certs";
         return new LogoutTokenJwtDecoder(jwkSetUri);
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

@@ -47,7 +47,7 @@
             box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
         }
         .btn.primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
         .btn.primary:hover {
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
@@ -87,8 +87,6 @@
                     console.log(result);
                     if (output) {
                         output.textContent = result;
-                    } else {
-                        alert(result);
                     }
                 })
                 .catch(error => {
@@ -96,8 +94,6 @@
                     console.error(result);
                     if (output) {
                         output.textContent = result;
-                    } else {
-                        alert(result);
                     }
                 });
         }
@@ -132,7 +128,13 @@
         <div th:if="${!authenticated}">
             <h1>🎯 欢迎使用 App B</h1>
             <p>这是一个基于Keycloak单点登录的演示应用。登录后，您可以在App A和App B之间无缝切换，无需重复认证。</p>
-            <a href="/oauth2/authorization/keycloak" class="btn">通过 Keycloak 登录</a>
+            <div style="margin-top: 20px;">
+                <a href="/oauth2/authorization/keycloak" class="btn">通过 Keycloak 登录</a>
+                <a href="/users/register" class="btn primary">注册新账户</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 14px; color: #666;">
+                还没有账户？点击"注册新账户"创建一个，注册后可在所有应用中使用！
+            </p>
         </div>
 
         <!-- 已登录状态 -->
