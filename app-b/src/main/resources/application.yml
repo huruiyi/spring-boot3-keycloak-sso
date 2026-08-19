@@ -13,7 +13,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://121.43.153.246:5432/user_db
     username: postgres
-    password: 7fe!GbxVrZoR1^V
+    password: ${POSTGRES_PWD}
   security:
     oauth2:
       client:
@@ -23,7 +23,10 @@ spring:
             client-secret: OeUio0MRCzC3S2wFckk46RmD0Tlg8oQy
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: openid,profile,email
+            scope:
+              - openid
+              - profile
+              - email
         provider:
           keycloak:
             issuer-uri: http://localhost:8080/realms/fairy.vip
